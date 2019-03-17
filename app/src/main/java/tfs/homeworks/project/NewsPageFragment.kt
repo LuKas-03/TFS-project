@@ -37,6 +37,7 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
 
         val recyclerView =view.findViewById<RecyclerView>(R.id.newsRecyclerView)
         recyclerView.adapter = NewsAdapter(newsList!!, this)
+        recyclerView.addItemDecoration(NewsItemDecoration(2))
     }
 
     override fun onNewsItemClick(position: Int, news: News, newsType: Int) {
