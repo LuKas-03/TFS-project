@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">project</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="stub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper et urna eu gravida. Maecenas metus ligula, mattis et aliquam a, ultrices ut diam. Suspendisse potenti. Morbi facilisis porta diam vel suscipit. Donec eget congue nibh, in faucibus lacus. Vivamus non nisl tempor, finibus velit id, efficitur nisl. Aenean mollis odio sit amet est feugiat, nec placerat orci convallis. Praesent ut commodo felis, luctus semper nunc. Suspendisse pharetra tortor eu sapien rhoncus, in pulvinar urna tempor.
+
+        Phasellus rhoncus nulla et fermentum consectetur. Suspendisse et ex vitae lectus mattis ornare. Suspendisse consectetur euismod auctor. Nunc pretium sapien at eros vehicula dictum. Proin mollis accumsan augue, et volutpat justo rutrum a. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus est felis, sollicitudin id felis et, luctus accumsan nisi. In at aliquam dolor, at vestibulum tortor. In quis nunc sapien. Vivamus maximus maximus nunc, eu aliquam felis commodo ut. Integer ac tortor sodales, facilisis risus at, aliquam enim. Aenean ligula sem, egestas nec convallis ut, cursus quis dolor. Pellentesque auctor gravida ligula eget sollicitudin. Suspendisse potenti.
+
+        Phasellus justo risus, imperdiet vel ante eget, maximus cursus lectus. Nulla turpis sapien, suscipit eget malesuada et, interdum rhoncus enim. Mauris vitae orci condimentum, rhoncus nibh sit amet, tincidunt velit. Phasellus et ligula ut orci lacinia volutpat eu ut est. Morbi pharetra varius nulla, a cursus erat congue et. Etiam sit amet est et turpis venenatis aliquam. Proin at neque diam. Integer velit neque, congue quis erat a, pharetra mattis turpis. Nam eros ligula, vestibulum sed suscipit ac, rutrum ut mi.</string>
+    <string name="star_button_title">Star</string>
+    <string name="on_liked_message">Новость добавлена в избранное</string>
+    <string name="last_news_tab_title">Последние</string>
+    <string name="liked_news_tab_title">Избранное</string>
+</resources>
