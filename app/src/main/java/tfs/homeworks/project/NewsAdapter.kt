@@ -33,7 +33,9 @@ class NewsAdapter(
         val news = newsList[position]
         holder.newsTitle.text = news.title
         holder.shortDescription.text = news.shortDescription
-        holder.publicationDate.text = news.date
+        if (news.date != null) {
+            holder.publicationDate.text = PublicationDateBuildUtil.getPublicationDate(news.date!!)
+        }
     }
 
 }

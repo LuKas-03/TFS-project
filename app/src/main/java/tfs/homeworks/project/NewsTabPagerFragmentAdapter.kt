@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import java.util.*
 
 
 class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context) : FragmentPagerAdapter(fm) {
@@ -26,16 +27,18 @@ class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context) : Frag
     }
 
     private fun getNews(newsType: Int): List<News> {
+        val time = Calendar.getInstance()
+        time.set(2019, 3, 17)
         return if (newsType == LATEST_NEWS) {
             listOf (
-                News("Last news #1", "This is not interesting news", "17.03.2019", null),
-                News("Last news #2", "This is not interesting news", "16.03.2019", null),
-                News("Last news #3", "This is not interesting news", "16.03.2019", null)
+                News("Last news #1", "This is not interesting news", News.toCalendar("2019-03-17"), null),
+                News("Last news #2", "This is not interesting news", News.toCalendar("2019-03-16"), null),
+                News("Last news #3", "This is not interesting news", News.toCalendar("2019-03-16"), null)
             )
         } else {
             listOf(
-                News("Best news #1", "This is very interesting news", "12.03.2019", null),
-                News("Best news #2", "This is very interesting news", "01.12.2018", null)
+                News("Best news #1", "This is very interesting news", News.toCalendar("2019-03-12"), null),
+                News("Best news #2", "This is very interesting news", News.toCalendar("2018-12-01"), null)
             )
         }
     }

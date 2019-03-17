@@ -26,8 +26,10 @@ class NewsActivity : AppCompatActivity() {
             content.text = news.content
         }
 
-        val publicationDate = findViewById<TextView>(R.id.publicationDate)
-        publicationDate.text = news?.date
+        if (news?.date != null) {
+            val publicationDate = findViewById<TextView>(R.id.publicationDate)
+            publicationDate.text = PublicationDateBuildUtil.getPublicationDate(news.date!!)
+        }
 
         isLikedNews = intent.extras?.getBoolean(ARG_IS_LIKED_NEWS)
     }
