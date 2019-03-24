@@ -49,10 +49,10 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
 
     companion object {
         @JvmStatic
-        fun newInstance(news: List<News>, isLikedNews: Boolean) =
+        fun newInstance(news: Array<News>, isLikedNews: Boolean) =
             NewsPageFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelableArray(ARG_NEWS, news.toTypedArray())
+                    putParcelableArray(ARG_NEWS, news)
                     putBoolean(ARG_NEWS_TYPE, isLikedNews)
                 }
             }

@@ -34,7 +34,7 @@ class NewsAdapter(
         holder.newsTitle.text = news.title
         holder.shortDescription.text = news.shortDescription
         if (news.date != null) {
-            holder.publicationDate.text = PublicationDateBuildUtil.getPublicationDate(news.date!!)
+            holder.publicationDate.text = PublicationDateBuildUtil.getPublicationDate(News.dateToCalendar(news.date!!))
         }
     }
 

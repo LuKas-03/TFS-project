@@ -1,37 +1,41 @@
 package tfs.homeworks.project
 
+import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import tfs.homeworks.project.database.NewsRoomRepository
 
 
 class NewsActivity : AppCompatActivity() {
 
     private var menu: Menu? = null
     private var isLikedNews: Boolean? = null
+    private val db = NewsRoomRepository.getInstance(this)
+    private var news: News? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
 
-        val news = intent.extras?.getParcelable<News>(ARG_NEWS)
+        news = intent.extras?.getParcelable<News>(ARG_NEWS)
         title = news?.title
         val content = findViewById<TextView>(R.id.newsContent)
 
-        // TODO: не забыть убрать заглушку
         if (news?.content != null) {
-            content.text = news.content
+            content.text = news!!.content
         }
 
         if (news?.date != null) {
             val publicationDate = findViewById<TextView>(R.id.publicationDate)
-            publicationDate.text = PublicationDateBuildUtil.getPublicationDate(news.date!!)
+            publicationDate.text = PublicationDateBuildUtil.getPublicationDate(News.dateToCalendar(news!!.date!!))
         }
 
-        isLikedNews = intent.extras?.getBoolean(ARG_IS_LIKED_NEWS)
+        isLikedNews = db.isLikedNews(news!!)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -40,10 +44,14 @@ class NewsActivity : AppCompatActivity() {
         return true
     }
 
+    @SuppressLint("ResourceType")
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (isLikedNews != null && isLikedNews == true) {
-            val starBtn = menu?.findItem(R.id.starButton)
-            starBtn?.isEnabled = false
+        val starBtn = menu?.findItem(R.id.starButton)
+        if (isLikedNews == true) {
+            starBtn?.icon = ResourcesCompat.getDrawable(resources, 17301516, null)
+        }
+        else {
+            starBtn?.icon = ResourcesCompat.getDrawable(resources, 17301515, null)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -59,8 +67,18 @@ class NewsActivity : AppCompatActivity() {
     }
 
     private fun onStarButtonClicked() {
-        val toast = Toast.makeText(this, getString(R.string.on_liked_message), Toast.LENGTH_LONG)
-        toast.show()
+        isLikedNews = if (isLikedNews!!) {
+            db.deleteFromLikedNews(news!!)
+            val toast = Toast.makeText(this, getString(R.string.delete_from_liked_news), Toast.LENGTH_LONG)
+            toast.show()
+            false
+        } else {
+            db.addToLikedNews(news!!)
+            val toast = Toast.makeText(this, getString(R.string.add_to_liked_news), Toast.LENGTH_LONG)
+            toast.show()
+            true
+        }
+        invalidateOptionsMenu()
     }
 
     companion object {

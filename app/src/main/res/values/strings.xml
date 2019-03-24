@@ -9,7 +9,8 @@
 
         Phasellus justo risus, imperdiet vel ante eget, maximus cursus lectus. Nulla turpis sapien, suscipit eget malesuada et, interdum rhoncus enim. Mauris vitae orci condimentum, rhoncus nibh sit amet, tincidunt velit. Phasellus et ligula ut orci lacinia volutpat eu ut est. Morbi pharetra varius nulla, a cursus erat congue et. Etiam sit amet est et turpis venenatis aliquam. Proin at neque diam. Integer velit neque, congue quis erat a, pharetra mattis turpis. Nam eros ligula, vestibulum sed suscipit ac, rutrum ut mi.</string>
     <string name="star_button_title">Star</string>
-    <string name="on_liked_message">Новость добавлена в избранное</string>
+    <string name="add_to_liked_news">Новость добавлена в избранное</string>
     <string name="last_news_tab_title">Последние</string>
     <string name="liked_news_tab_title">Избранное</string>
+    <string name="delete_from_liked_news">Новость удалена из избранных</string>
 </resources>
