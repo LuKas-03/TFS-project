@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity
-class News() : Parcelable {
+class NewsItem() : Parcelable {
 
     constructor(parcel: Parcel) : this() {
         val data = arrayOfNulls<String>(5)
@@ -52,15 +52,15 @@ class News() : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<News> {
+    companion object CREATOR : Parcelable.Creator<NewsItem> {
         @SuppressLint("SimpleDateFormat")
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
-        override fun createFromParcel(parcel: Parcel): News {
-            return News(parcel)
+        override fun createFromParcel(parcel: Parcel): NewsItem {
+            return NewsItem(parcel)
         }
 
-        override fun newArray(size: Int): Array<News?> {
+        override fun newArray(size: Int): Array<NewsItem?> {
             return arrayOfNulls(size)
         }
 

@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         db = NewsRoomRepository.getInstance(this)
         if (savedInstanceState == null) {
-            if (db?.getNews() == null) {
+            if (db?.getNews()?.isEmpty() == true) {
                 addStabsToDatabase()
             }
         }
@@ -37,11 +37,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun addStabsToDatabase() {
         val news = listOf (
-            News("Last news #1", "This is not interesting news", "2019-03-17", getString(R.string.stub)),
-            News("Last news #2", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
-            News("Last news #3", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
-            News("Best news #1", "This is very interesting news", "2019-03-12", getString(R.string.stub)),
-            News("Best news #2", "This is very interesting news", "2018-12-01", getString(R.string.stub))
+            NewsItem("Last news #1", "This is not interesting news", "2019-03-17", getString(R.string.stub)),
+            NewsItem("Last news #2", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
+            NewsItem("Last news #3", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
+            NewsItem("Best news #1", "This is very interesting news", "2019-03-12", getString(R.string.stub)),
+            NewsItem("Best news #2", "This is very interesting news", "2018-12-01", getString(R.string.stub))
         )
 
         db?.insertNews(news)

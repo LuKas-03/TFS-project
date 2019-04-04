@@ -5,29 +5,29 @@ import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.arch.persistence.room.Query
-import tfs.homeworks.project.News
+import tfs.homeworks.project.NewsItem
 
 @Dao
 interface NewsDao {
 
-    @Query("SELECT * FROM news WHERE id=:idToSelect")
-    fun getNewsById(idToSelect: Int): News
+    @Query("SELECT * FROM NewsItem WHERE id=:idToSelect")
+    fun getNewsById(idToSelect: Int): NewsItem
 
-    @Query("SELECT * FROM news")
-    fun getNews():  Array<News>
+    @Query("SELECT * FROM NewsItem")
+    fun getNews():  Array<NewsItem>
 
-    @Query("SELECT * FROM news WHERE news.id IN (SELECT id FROM likednews)")
-    fun getLikedNews():  Array<News>
-
-    @Insert(onConflict = REPLACE)
-    fun insert(news: News)
+    @Query("SELECT * FROM NewsItem WHERE NewsItem.id IN (SELECT id FROM likednews)")
+    fun getLikedNews():  Array<NewsItem>
 
     @Insert(onConflict = REPLACE)
-    fun insert(news: List<News>)
+    fun insert(newsItem: NewsItem)
+
+    @Insert(onConflict = REPLACE)
+    fun insert(newsItems: List<NewsItem>)
 
     @Delete
-    fun delete(news: News)
+    fun delete(newsItem: NewsItem)
 
-    @Query("DELETE FROM news")
+    @Query("DELETE FROM NewsItem")
     fun deleteAll()
 }

@@ -13,4 +13,6 @@
     <string name="last_news_tab_title">Последние</string>
     <string name="liked_news_tab_title">Избранное</string>
     <string name="delete_from_liked_news">Новость удалена из избранных</string>
+    <string name="today_ru">Сегодня</string>
+    <string name="yesterday_ru">Вчера</string>
 </resources>

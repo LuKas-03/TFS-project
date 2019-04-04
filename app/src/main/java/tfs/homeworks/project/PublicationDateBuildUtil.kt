@@ -12,11 +12,11 @@ class PublicationDateBuildUtil {
             val now = Calendar.getInstance()
             if (now[Calendar.YEAR] == calendar[Calendar.YEAR] && now[Calendar.MONTH] == calendar[Calendar.MONTH]){
                 if (now[Calendar.DAY_OF_MONTH] == calendar[Calendar.DAY_OF_MONTH]) {
-                    return "Сегодня"
+                    return systemResources.getString(R.string.today_ru)
                 }
                 now.add(Calendar.DATE, -1)
                 if (now[Calendar.DATE] == calendar[Calendar.DATE]) {
-                    return "Вчера"
+                    return systemResources.getString(R.string.yesterday_ru)
                 }
             }
             return "${calendar[Calendar.DATE]} ${monthTranslate[calendar[Calendar.MONTH]]}, ${calendar[Calendar.YEAR]}"

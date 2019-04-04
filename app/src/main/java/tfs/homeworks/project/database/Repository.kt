@@ -1,20 +1,20 @@
 package tfs.homeworks.project.database
 
-import tfs.homeworks.project.News
+import tfs.homeworks.project.NewsItem
 
 interface Repository {
-    fun getNews(): Array<News>
-    fun getLikedNews(): Array<News>
-    fun getNewsById(id: Int): News
+    fun getNews(): Array<NewsItem>
+    fun getLikedNews(): Array<NewsItem>
+    fun getNewsById(id: Int): NewsItem
 
-    fun insertNews(news: News)
-    fun addToLikedNews(news: News)
-    fun insertNews(news: List<News>)
+    fun insertNews(newsItem: NewsItem)
+    fun addToLikedNews(newsItem: NewsItem)
+    fun insertNews(newsItems: List<NewsItem>)
 
-    fun deleteNews(news: News)
-    fun deleteFromLikedNews(news: News)
+    fun deleteNews(newsItem: NewsItem)
+    fun deleteFromLikedNews(newsItem: NewsItem)
 
-    fun isLikedNews(news: News): Boolean
+    fun isLikedNews(newsItem: NewsItem): Boolean
 
     fun deleteAll()
 }

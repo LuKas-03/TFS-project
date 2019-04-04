@@ -3,7 +3,6 @@ package tfs.homeworks.project
 import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.PagerAdapter
 import tfs.homeworks.project.database.Repository
@@ -33,7 +32,7 @@ class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context, db: Re
         return PagerAdapter.POSITION_NONE
     }
 
-    private fun getNews(newsType: Int): Array<News> {
+    private fun getNews(newsType: Int): Array<NewsItem> {
         return if (newsType == LATEST_NEWS) {
             database.getNews()
         } else {

@@ -11,6 +11,7 @@ import android.view.View
 class NewsItemDecoration(offset: Int) : RecyclerView.ItemDecoration() {
 
     private val offsetDp = (offset * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+    private val paint = createPaint()
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         outRect.bottom = offsetDp
@@ -23,10 +24,14 @@ class NewsItemDecoration(offset: Int) : RecyclerView.ItemDecoration() {
         for (i in 0 until count - 1) {
             val child = parent.getChildAt(i)
             val bottom = child.bottom
-            val paint = Paint()
-            paint.color = Color.GRAY
 
             c.drawRect(0F, bottom.toFloat(), width.toFloat(), (bottom + offsetDp).toFloat(), paint)
         }
+    }
+
+    private fun createPaint(): Paint {
+        val paint = Paint()
+        paint.color = Color.GRAY
+        return paint
     }
 }
