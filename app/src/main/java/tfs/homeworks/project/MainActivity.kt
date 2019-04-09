@@ -1,15 +1,14 @@
 package tfs.homeworks.project
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
 import tfs.homeworks.project.database.NewsRoomRepository
 import tfs.homeworks.project.database.Repository
 
 class MainActivity : AppCompatActivity() {
 
-    private var db: Repository? = null
     private var adapter: NewsTabPagerFragmentAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
-        adapter = NewsTabPagerFragmentAdapter(supportFragmentManager, this, db!!)
+        adapter = NewsTabPagerFragmentAdapter(supportFragmentManager, this)
         viewPager.adapter = adapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
@@ -45,5 +44,12 @@ class MainActivity : AppCompatActivity() {
         )
 
         db?.insertNews(news)
+    }
+
+    companion object {
+        private var db: Repository? = null
+        fun getDatabaseInstance(): Repository {
+            return db!!
+        }
     }
 }

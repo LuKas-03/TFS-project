@@ -8,18 +8,18 @@ class PublicationDateBuildUtil {
     companion object {
         private val systemResources = Resources.getSystem()
 
-        fun getPublicationDate(calendar: Calendar): String {
+        fun Calendar.getPublicationDate(): String {
             val now = Calendar.getInstance()
-            if (now[Calendar.YEAR] == calendar[Calendar.YEAR] && now[Calendar.MONTH] == calendar[Calendar.MONTH]){
-                if (now[Calendar.DAY_OF_MONTH] == calendar[Calendar.DAY_OF_MONTH]) {
+            if (now[Calendar.YEAR] == this[Calendar.YEAR] && now[Calendar.MONTH] == this[Calendar.MONTH]){
+                if (now[Calendar.DAY_OF_MONTH] == this[Calendar.DAY_OF_MONTH]) {
                     return systemResources.getString(R.string.today_ru)
                 }
                 now.add(Calendar.DATE, -1)
-                if (now[Calendar.DATE] == calendar[Calendar.DATE]) {
+                if (now[Calendar.DATE] == this[Calendar.DATE]) {
                     return systemResources.getString(R.string.yesterday_ru)
                 }
             }
-            return "${calendar[Calendar.DATE]} ${monthTranslate[calendar[Calendar.MONTH]]}, ${calendar[Calendar.YEAR]}"
+            return "${this[Calendar.DATE]} ${monthTranslate[this[Calendar.MONTH]]}, ${this[Calendar.YEAR]}"
         }
 
         private val monthTranslate: Map<Int, String> = mapOf(

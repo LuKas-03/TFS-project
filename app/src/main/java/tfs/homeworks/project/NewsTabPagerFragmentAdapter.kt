@@ -8,16 +8,15 @@ import android.support.v4.view.PagerAdapter
 import tfs.homeworks.project.database.Repository
 
 
-class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context, db: Repository) : FragmentStatePagerAdapter(fm) {
+class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context) : FragmentStatePagerAdapter(fm) {
 
-    private val database = db
     private val tabTitles = arrayOf(
         context.getString(R.string.last_news_tab_title),
         context.getString(R.string.liked_news_tab_title)
     )
 
     override fun getItem(position: Int): Fragment {
-        return NewsPageFragment.newInstance(getNews(position), position == LIKED_NEWS)
+        return NewsPageFragment.newInstance(position == LIKED_NEWS)
     }
 
     override fun getCount(): Int {
@@ -30,14 +29,6 @@ class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context, db: Re
 
     override fun getItemPosition(`object`: Any): Int {
         return PagerAdapter.POSITION_NONE
-    }
-
-    private fun getNews(newsType: Int): Array<NewsItem> {
-        return if (newsType == LATEST_NEWS) {
-            database.getNews()
-        } else {
-            database.getLikedNews()
-        }
     }
 
     companion object {

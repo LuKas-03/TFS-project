@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/starButton"
-          android:icon="@android:drawable/star_big_off" android:title="@string/star_button_title"
+          android:icon="@drawable/ic_star_off_white_32dp" android:title="@string/star_button_title"
           app:showAsAction="always"/>
 </menu>

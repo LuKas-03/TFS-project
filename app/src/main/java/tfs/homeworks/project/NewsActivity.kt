@@ -32,7 +32,7 @@ class NewsActivity : AppCompatActivity() {
 
         if (newsItem?.date != null) {
             val publicationDate = findViewById<TextView>(R.id.publicationDate)
-            publicationDate.text = PublicationDateBuildUtil.getPublicationDate(NewsItem.dateToCalendar(newsItem!!.date!!))
+            publicationDate.text = newsItem!!.getDateInLongFormat()
         }
 
         isLikedNews = db.isLikedNews(newsItem!!)
@@ -46,10 +46,10 @@ class NewsActivity : AppCompatActivity() {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val starBtn = menu?.findItem(R.id.starButton)
         if (isLikedNews == true) {
-            starBtn?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.star_big_on, null)
+            starBtn?.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_star_white_32dp, null)
         }
         else {
-            starBtn?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.star_big_off, null)
+            starBtn?.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_star_off_white_32dp, null)
         }
         return super.onPrepareOptionsMenu(menu)
     }

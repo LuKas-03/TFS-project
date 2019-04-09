@@ -10,14 +10,19 @@ import android.view.ViewGroup
 
 class NewsPageFragment : Fragment(), OnNewsItemClickListener {
 
-    private lateinit var newsItems: List<NewsItem>
+    private lateinit var newsItems: Array<NewsItem>
     private var isLikedNews: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            newsItems = it.getParcelableArrayList(ARG_NEWS)!!
             isLikedNews = it.getBoolean(ARG_NEWS_TYPE)
+        }
+
+        newsItems = if (isLikedNews) {
+            MainActivity.getDatabaseInstance().getLikedNews()
+        } else {
+            MainActivity.getDatabaseInstance().getNews()
         }
     }
 
@@ -41,14 +46,12 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
     }
 
     companion object {
-        private const val ARG_NEWS = "newsCollection"
         private const val ARG_NEWS_TYPE = "newsType"
 
         @JvmStatic
-        fun newInstance(newsItems: Array<NewsItem>, isLikedNews: Boolean) =
+        fun newInstance(isLikedNews: Boolean) =
             NewsPageFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelableArrayList(ARG_NEWS, newsItems.toCollection(ArrayList()))
                     putBoolean(ARG_NEWS_TYPE, isLikedNews)
                 }
             }

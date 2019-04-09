@@ -6,6 +6,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import tfs.homeworks.project.PublicationDateBuildUtil.Companion.getPublicationDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,6 +43,13 @@ class NewsItem() : Parcelable {
     var date: String? = null
     @ColumnInfo
     var content: String? = null
+
+    fun getDateInLongFormat(): String? {
+        return if (date == null) {
+            null
+        }
+        else dateToCalendar(date!!).getPublicationDate()
+    }
 
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {

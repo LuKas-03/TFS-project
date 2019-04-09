@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 class NewsAdapter(
-    private val newsItems : List<NewsItem>,
+    private val newsItems : Array<NewsItem>,
     private val onClickListener: OnNewsItemClickListener
 ) : RecyclerView.Adapter<NewsViewHolder>() {
 
@@ -29,12 +29,10 @@ class NewsAdapter(
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        val news = newsItems[position]
-        holder.newsTitle.text = news.title
-        holder.shortDescription.text = news.shortDescription
-        if (news.date != null) {
-            holder.publicationDate.text = PublicationDateBuildUtil.getPublicationDate(NewsItem.dateToCalendar(news.date!!))
-        }
+        val newsItem = newsItems[position]
+        holder.newsTitle.text = newsItem.title
+        holder.shortDescription.text = newsItem.shortDescription
+        holder.publicationDate.text = newsItem.getDateInLongFormat()
     }
 }
 
