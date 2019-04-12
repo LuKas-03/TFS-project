@@ -10,7 +10,7 @@ import android.view.ViewGroup
 
 class NewsPageFragment : Fragment(), OnNewsItemClickListener {
 
-    private lateinit var newsItems: Array<NewsItem>
+    private var dataSet: MutableList<Any>  = mutableListOf()
     private var isLikedNews: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +19,30 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
             isLikedNews = it.getBoolean(ARG_NEWS_TYPE)
         }
 
-        newsItems = if (isLikedNews) {
+        createDataSet()
+    }
+
+    private fun createDataSet() {
+        val newsItems = if (isLikedNews) {
             MainActivity.getDatabaseInstance().getLikedNews()
         } else {
             MainActivity.getDatabaseInstance().getNews()
+        }
+
+        if (newsItems.isEmpty()) {
+            return
+        }
+        newsItems.sortByDescending { x -> NewsItem.dateToCalendar(x.date!!) }
+
+        var currentDate = newsItems[0].date
+        dataSet = mutableListOf(NewsGroupHeader(newsItems[0].getDateInLongFormat()!!))
+
+        for (newsItem in newsItems) {
+            if (newsItem.date != currentDate) {
+                dataSet.add(NewsGroupHeader(newsItem.getDateInLongFormat()!!))
+                currentDate = newsItem.date
+            }
+            dataSet.add(newsItem)
         }
     }
 
@@ -37,7 +57,7 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView =view.findViewById<RecyclerView>(R.id.newsRecyclerView)
-        recyclerView.adapter = NewsAdapter(newsItems, this)
+        recyclerView.adapter = NewsAdapter(dataSet.toTypedArray(), this)
         recyclerView.addItemDecoration(NewsItemDecoration(2))
     }
 

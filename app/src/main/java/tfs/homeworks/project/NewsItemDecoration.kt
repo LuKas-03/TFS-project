@@ -2,7 +2,6 @@ package tfs.homeworks.project
 
 import android.content.res.Resources
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
@@ -31,7 +30,7 @@ class NewsItemDecoration(offset: Int) : RecyclerView.ItemDecoration() {
 
     private fun createPaint(): Paint {
         val paint = Paint()
-        paint.color = Color.GRAY
+        paint.setARGB(255, 128, 203, 196)
         return paint
     }
 }
