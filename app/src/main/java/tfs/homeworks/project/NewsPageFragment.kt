@@ -6,12 +6,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 
 class NewsPageFragment : Fragment(), OnNewsItemClickListener {
 
     private var dataSet: MutableList<Any>  = mutableListOf()
     private var isLikedNews: Boolean = false
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,12 +27,20 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
     }
 
     private fun createDataSet() {
-        val newsItems = if (isLikedNews) {
-            MainActivity.getDatabaseInstance().getLikedNews()
+        if (isLikedNews) {
+            disposable.add(MainActivity.getDatabaseInstance().getLikedNews().toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { t1, _ -> createDataSet(t1) })
         } else {
-            MainActivity.getDatabaseInstance().getNews()
+            disposable.add(MainActivity.getDatabaseInstance().getNews().toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { t1, _ -> createDataSet(t1) })
         }
+    }
 
+    private fun createDataSet(newsItems: MutableList<NewsItem>) {
         if (newsItems.isEmpty()) {
             return
         }

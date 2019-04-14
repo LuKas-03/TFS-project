@@ -1,20 +1,23 @@
 package tfs.homeworks.project.database
 
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
 import tfs.homeworks.project.NewsItem
 
 interface Repository {
-    fun getNews(): Array<NewsItem>
-    fun getLikedNews(): Array<NewsItem>
-    fun getNewsById(id: Int): NewsItem
+    fun getNews(): Flowable<NewsItem>
+    fun getLikedNews(): Flowable<NewsItem>
+    fun getNewsById(id: Int): Single<NewsItem>
 
-    fun insertNews(newsItem: NewsItem)
-    fun addToLikedNews(newsItem: NewsItem)
-    fun insertNews(newsItems: List<NewsItem>)
+    fun insertNews(newsItem: NewsItem): Completable
+    fun addToLikedNews(newsItem: NewsItem): Completable
+    fun insertNews(newsItems: List<NewsItem>): Completable
 
     fun deleteNews(newsItem: NewsItem)
-    fun deleteFromLikedNews(newsItem: NewsItem)
+    fun deleteFromLikedNews(newsItem: NewsItem): Completable
 
-    fun isLikedNews(newsItem: NewsItem): Boolean
+    fun isLikedNews(newsItem: NewsItem): Single<Boolean>
 
     fun deleteAll()
 }

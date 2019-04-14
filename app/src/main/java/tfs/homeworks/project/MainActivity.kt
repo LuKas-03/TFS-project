@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import tfs.homeworks.project.database.NewsRoomRepository
 import tfs.homeworks.project.database.Repository
 
 class MainActivity : AppCompatActivity() {
 
     private var adapter: NewsTabPagerFragmentAdapter? = null
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,9 +22,11 @@ class MainActivity : AppCompatActivity() {
 
         db = NewsRoomRepository.getInstance(this)
         if (savedInstanceState == null) {
-            if (db?.getNews()?.isEmpty() == true) {
-                addStabsToDatabase()
-            }
+            disposable.add(getDatabaseInstance().getNews()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ if (it == null) addStabsToDatabase() },
+                    { error -> Log.e("ERROR", "Unable to get username", error) }))
         }
         val viewPager = findViewById<ViewPager>(R.id.viewPager)
         adapter = NewsTabPagerFragmentAdapter(supportFragmentManager, this)
@@ -43,7 +50,10 @@ class MainActivity : AppCompatActivity() {
             NewsItem("Best news #2", "This is very interesting news", "2018-12-01", getString(R.string.stub))
         )
 
-        db?.insertNews(news)
+        disposable.add(getDatabaseInstance().insertNews(news)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe())
     }
 
     companion object {

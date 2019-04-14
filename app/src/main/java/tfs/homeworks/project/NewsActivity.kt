@@ -4,11 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.content.res.ResourcesCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import tfs.homeworks.project.database.NewsRoomRepository
 
 
@@ -17,6 +21,7 @@ class NewsActivity : AppCompatActivity() {
     private var isLikedNews: Boolean? = null
     private val db = NewsRoomRepository.getInstance(this)
     private var newsItem: NewsItem? = null
+    private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +40,10 @@ class NewsActivity : AppCompatActivity() {
             publicationDate.text = newsItem!!.getDateInLongFormat()
         }
 
-        isLikedNews = db.isLikedNews(newsItem!!)
+        isLikedNews = disposable.add(db.isLikedNews(newsItem!!)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,18 +73,30 @@ class NewsActivity : AppCompatActivity() {
     }
 
     private fun onStarButtonClicked() {
-        isLikedNews = if (isLikedNews!!) {
-            db.deleteFromLikedNews(newsItem!!)
-            val toast = Toast.makeText(this, getString(R.string.delete_from_liked_news), Toast.LENGTH_LONG)
-            toast.show()
-            false
+        if (isLikedNews!!) {
+            disposable.add(db.deleteFromLikedNews(newsItem!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    showToast(getString(R.string.delete_from_liked_news))
+                    isLikedNews = false
+                    invalidateOptionsMenu()
+                })
         } else {
-            db.addToLikedNews(newsItem!!)
-            val toast = Toast.makeText(this, getString(R.string.add_to_liked_news), Toast.LENGTH_LONG)
-            toast.show()
-            true
+            disposable.add(db.addToLikedNews(newsItem!!)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    showToast(getString(R.string.delete_from_liked_news))
+                    isLikedNews = true
+                    invalidateOptionsMenu()
+                })
         }
-        invalidateOptionsMenu()
+    }
+
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(this, message, Toast.LENGTH_LONG)
+        toast.show()
     }
 
     companion object {
