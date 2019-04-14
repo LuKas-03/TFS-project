@@ -1,9 +1,9 @@
 package tfs.homeworks.project
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,19 +21,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         db = NewsRoomRepository.getInstance(this)
-        if (savedInstanceState == null) {
-            disposable.add(getDatabaseInstance().getNews()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ if (it == null) addStabsToDatabase() },
-                    { error -> Log.e("ERROR", "Unable to get username", error) }))
-        }
-        val viewPager = findViewById<ViewPager>(R.id.viewPager)
+        val viewPager = findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPager)
         adapter = NewsTabPagerFragmentAdapter(supportFragmentManager, this)
         viewPager.adapter = adapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        disposable.add(getDatabaseInstance().getNews()
+            .toList()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { t1 -> if ( t1.isEmpty()) addStabsToDatabase() },
+                { error -> Log.e("ERROR", "Unable to add stabs", error) }))
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        disposable.clear()
     }
 
     override fun onRestart() {

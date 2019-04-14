@@ -2,14 +2,13 @@ package tfs.homeworks.project
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
-import android.support.v4.content.res.ResourcesCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +17,7 @@ import tfs.homeworks.project.database.NewsRoomRepository
 
 class NewsActivity : AppCompatActivity() {
 
-    private var isLikedNews: Boolean? = null
+    private var isLikedNews: Boolean = false
     private val db = NewsRoomRepository.getInstance(this)
     private var newsItem: NewsItem? = null
     private val disposable = CompositeDisposable()
@@ -39,11 +38,21 @@ class NewsActivity : AppCompatActivity() {
             val publicationDate = findViewById<TextView>(R.id.publicationDate)
             publicationDate.text = newsItem!!.getDateInLongFormat()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         isLikedNews = disposable.add(db.isLikedNews(newsItem!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe())
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        disposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,7 +62,7 @@ class NewsActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val starBtn = menu?.findItem(R.id.starButton)
-        if (isLikedNews == true) {
+        if (isLikedNews) {
             starBtn?.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_star_white_32dp, null)
         }
         else {
@@ -73,7 +82,7 @@ class NewsActivity : AppCompatActivity() {
     }
 
     private fun onStarButtonClicked() {
-        if (isLikedNews!!) {
+        if (isLikedNews) {
             disposable.add(db.deleteFromLikedNews(newsItem!!)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

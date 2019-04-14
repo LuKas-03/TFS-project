@@ -1,7 +1,7 @@
 package tfs.homeworks.project.database
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import tfs.homeworks.project.NewsItem
 
 @Database(entities = arrayOf(NewsItem::class, LikedNews::class), version = 1)

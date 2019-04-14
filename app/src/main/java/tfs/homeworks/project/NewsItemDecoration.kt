@@ -4,19 +4,19 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
-class NewsItemDecoration(offset: Int) : RecyclerView.ItemDecoration() {
+class NewsItemDecoration(offset: Int) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
 
     private val offsetDp = (offset * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
     private val paint = createPaint()
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         outRect.bottom = offsetDp
     }
 
-    override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+    override fun onDrawOver(c: Canvas, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         val count = parent.childCount
         val width = parent.width
 

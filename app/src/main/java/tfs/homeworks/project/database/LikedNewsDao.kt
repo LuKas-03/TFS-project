@@ -1,6 +1,6 @@
 package tfs.homeworks.project.database
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import io.reactivex.Completable
 import io.reactivex.Maybe
 

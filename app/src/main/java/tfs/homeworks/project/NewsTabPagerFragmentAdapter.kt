@@ -1,21 +1,21 @@
 package tfs.homeworks.project
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.PagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import tfs.homeworks.project.database.Repository
 
 
-class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context) : FragmentStatePagerAdapter(fm) {
+class NewsTabPagerFragmentAdapter(fm: androidx.fragment.app.FragmentManager?, context: Context) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
 
     private val tabTitles = arrayOf(
         context.getString(R.string.last_news_tab_title),
         context.getString(R.string.liked_news_tab_title)
     )
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return NewsPageFragment.newInstance(position == LIKED_NEWS)
     }
 
@@ -28,7 +28,7 @@ class NewsTabPagerFragmentAdapter(fm: FragmentManager?, context: Context) : Frag
     }
 
     override fun getItemPosition(`object`: Any): Int {
-        return PagerAdapter.POSITION_NONE
+        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
     }
 
     companion object {

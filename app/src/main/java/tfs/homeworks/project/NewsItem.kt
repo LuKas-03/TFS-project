@@ -1,11 +1,9 @@
 package tfs.homeworks.project
 
 import android.annotation.SuppressLint
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.*
 import tfs.homeworks.project.PublicationDateBuildUtil.Companion.getPublicationDate
 import java.text.SimpleDateFormat
 import java.util.*

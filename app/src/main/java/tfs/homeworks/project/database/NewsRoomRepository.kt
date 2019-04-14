@@ -1,20 +1,18 @@
 package tfs.homeworks.project.database
 
-import android.arch.persistence.room.Room
 import android.content.Context
+import androidx.room.Room
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import tfs.homeworks.project.NewsItem
 
 class NewsRoomRepository private constructor(context: Context) : Repository{
 
     private val db: NewsDatabase = Room.databaseBuilder(
-        context,
+        context.applicationContext,
         NewsDatabase::class.java,
         "news")
-        //.allowMainThreadQueries() // ToDo: убрать после вынесения в отдельный поток
         .build()
     private val newsDao = db.newsDao()
     private val likedNewsDao = db.likedNewsDao()

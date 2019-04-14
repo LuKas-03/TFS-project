@@ -1,17 +1,17 @@
 package tfs.homeworks.project
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 class NewsAdapter(
     private val dataset : Array<Any>,
     private val onClickListener: OnNewsItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parrent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parrent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parrent.context)
         when(viewType) {
             TYPE_NEWS -> {
@@ -19,7 +19,7 @@ class NewsAdapter(
                 val holder = NewsViewHolder(view)
                 view.setOnClickListener {
                     val pos = holder.adapterPosition
-                    if (pos != RecyclerView.NO_POSITION) {
+                    if (pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
                         onClickListener.onNewsItemClick(pos, dataset[pos] as NewsItem, 0)
                     }
                 }
@@ -37,7 +37,7 @@ class NewsAdapter(
         return dataset.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val viewType = getItemViewType(position)
         when (viewType) {
             TYPE_NEWS -> {
@@ -65,11 +65,11 @@ class NewsAdapter(
     }
 }
 
-class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class NewsViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     var newsTitle: TextView = itemView.findViewById(R.id.newsTitle)
     var shortDescription: TextView = itemView.findViewById(R.id.shortDescription)
 }
 
-class NewsGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class NewsGroupViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     var header: TextView = itemView.findViewById(R.id.groupHeader)
 }

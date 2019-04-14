@@ -1,17 +1,17 @@
 package tfs.homeworks.project
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 
-class NewsPageFragment : Fragment(), OnNewsItemClickListener {
+class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListener {
 
     private var dataSet: MutableList<Any>  = mutableListOf()
     private var isLikedNews: Boolean = false
@@ -22,8 +22,12 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
         arguments?.let {
             isLikedNews = it.getBoolean(ARG_NEWS_TYPE)
         }
-
         createDataSet()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
     private fun createDataSet() {
@@ -31,13 +35,20 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
             disposable.add(MainActivity.getDatabaseInstance().getLikedNews().toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { t1, _ -> createDataSet(t1) })
+                .subscribe(
+                    { t1 -> createDataSet(t1) },
+                    { error -> Log.e("ERROR", "Unable to get liked news collection", error) }))
         } else {
             disposable.add(MainActivity.getDatabaseInstance().getNews().toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { t1, _ -> createDataSet(t1) })
         }
+    }
+
+    private fun showToast(message: String) {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+        toast.show()
     }
 
     private fun createDataSet(newsItems: MutableList<NewsItem>) {
@@ -68,7 +79,7 @@ class NewsPageFragment : Fragment(), OnNewsItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView =view.findViewById<RecyclerView>(R.id.newsRecyclerView)
+        val recyclerView =view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.newsRecyclerView)
         recyclerView.adapter = NewsAdapter(dataSet.toTypedArray(), this)
         recyclerView.addItemDecoration(NewsItemDecoration(2))
     }
