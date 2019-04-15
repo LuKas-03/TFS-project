@@ -6,8 +6,8 @@ import io.reactivex.Single
 import tfs.homeworks.project.NewsItem
 
 interface Repository {
-    fun getNews(): Flowable<NewsItem>
-    fun getLikedNews(): Flowable<NewsItem>
+    fun getNews(): Flowable<List<NewsItem>>
+    fun getLikedNews(): Flowable<List<NewsItem>>
     fun getNewsById(id: Int): Single<NewsItem>
 
     fun insertNews(newsItem: NewsItem): Completable

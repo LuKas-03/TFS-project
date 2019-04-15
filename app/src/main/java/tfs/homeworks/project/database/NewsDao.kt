@@ -14,10 +14,10 @@ interface NewsDao {
     fun getNewsById(idToSelect: Int): Single<NewsItem>
 
     @Query("SELECT * FROM NewsItem")
-    fun getNews():  Flowable<NewsItem>
+    fun getNews():  Flowable<List<NewsItem>>
 
     @Query("SELECT * FROM NewsItem WHERE NewsItem.id IN (SELECT id FROM likednews)")
-    fun getLikedNews():  Flowable<NewsItem>
+    fun getLikedNews():  Flowable<List<NewsItem>>
 
     @Insert(onConflict = REPLACE)
     fun insert(newsItem: NewsItem): Completable

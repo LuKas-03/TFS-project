@@ -3,6 +3,7 @@ package tfs.homeworks.project
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -43,10 +44,12 @@ class NewsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        isLikedNews = disposable.add(db.isLikedNews(newsItem!!)
+        disposable.add(db.isLikedNews(newsItem!!)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe())
+            .subscribe(
+                { isLikedNews = it },
+                { Log.e("ERROR", "Unable to determine type of news")}))
     }
 
     override fun onStop() {
@@ -96,7 +99,7 @@ class NewsActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    showToast(getString(R.string.delete_from_liked_news))
+                    showToast(getString(R.string.add_to_liked_news))
                     isLikedNews = true
                     invalidateOptionsMenu()
                 })

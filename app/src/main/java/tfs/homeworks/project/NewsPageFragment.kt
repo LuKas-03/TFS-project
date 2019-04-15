@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -13,7 +14,9 @@ import io.reactivex.schedulers.Schedulers
 
 class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListener {
 
-    private var dataSet: MutableList<Any>  = mutableListOf()
+    private var dataSet: ArrayList<Any>  = arrayListOf()
+    private var recyclerViewAdapter: NewsAdapter = NewsAdapter(dataSet, this)
+    private var newsItems: MutableList<NewsItem>  = mutableListOf()
     private var isLikedNews: Boolean = false
     private val disposable = CompositeDisposable()
 
@@ -22,33 +25,36 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
         arguments?.let {
             isLikedNews = it.getBoolean(ARG_NEWS_TYPE)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
         createDataSet()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         disposable.clear()
     }
 
     private fun createDataSet() {
         if (isLikedNews) {
-            disposable.add(MainActivity.getDatabaseInstance().getLikedNews().toList()
+            disposable.add(MainActivity.getDatabaseInstance().getLikedNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { t1 -> createDataSet(t1) },
-                    { error -> Log.e("ERROR", "Unable to get liked news collection", error) }))
+                    { createDataSet(ArrayList(it))},
+                    {Log.e("ERROR", "Unable to load liked news collection", it)})
+            )
         } else {
-            disposable.add(MainActivity.getDatabaseInstance().getNews().toList()
+            disposable.add(MainActivity.getDatabaseInstance().getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { t1, _ -> createDataSet(t1) })
+                .subscribe(
+                    { createDataSet(ArrayList(it))},
+                    {Log.e("ERROR", "Unable to load all news collection", it)})
+            )
         }
-    }
-
-    private fun showToast(message: String) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-        toast.show()
     }
 
     private fun createDataSet(newsItems: MutableList<NewsItem>) {
@@ -58,7 +64,7 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
         newsItems.sortByDescending { x -> NewsItem.dateToCalendar(x.date!!) }
 
         var currentDate = newsItems[0].date
-        dataSet = mutableListOf(NewsGroupHeader(newsItems[0].getDateInLongFormat()!!))
+        dataSet = arrayListOf(NewsGroupHeader(newsItems[0].getDateInLongFormat()!!))
 
         for (newsItem in newsItems) {
             if (newsItem.date != currentDate) {
@@ -67,6 +73,9 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
             }
             dataSet.add(newsItem)
         }
+
+        recyclerViewAdapter.dataset = dataSet
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(
@@ -80,7 +89,8 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView =view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.newsRecyclerView)
-        recyclerView.adapter = NewsAdapter(dataSet.toTypedArray(), this)
+
+        recyclerView.adapter = recyclerViewAdapter
         recyclerView.addItemDecoration(NewsItemDecoration(2))
     }
 

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class NewsAdapter(
-    private val dataset : Array<Any>,
+    public var dataset : ArrayList<Any>,
     private val onClickListener: OnNewsItemClickListener
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 

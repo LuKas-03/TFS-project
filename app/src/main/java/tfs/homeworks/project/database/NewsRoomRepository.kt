@@ -17,11 +17,11 @@ class NewsRoomRepository private constructor(context: Context) : Repository{
     private val newsDao = db.newsDao()
     private val likedNewsDao = db.likedNewsDao()
 
-    override fun getNews(): Flowable<NewsItem> {
+    override fun getNews(): Flowable<List<NewsItem>> {
         return newsDao.getNews()
     }
 
-    override fun getLikedNews(): Flowable<NewsItem> {
+    override fun getLikedNews(): Flowable<List<NewsItem>> {
         return newsDao.getLikedNews()
     }
 
