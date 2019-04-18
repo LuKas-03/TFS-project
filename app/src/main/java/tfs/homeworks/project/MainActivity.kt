@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         disposable.add(getDatabaseInstance().getNews()
-            .toList()
+            .firstOrError()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

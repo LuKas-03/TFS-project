@@ -48,7 +48,10 @@ class NewsActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { isLikedNews = it },
+                {
+                    isLikedNews = it
+                    invalidateOptionsMenu()
+                },
                 { Log.e("ERROR", "Unable to determine type of news")}))
     }
 
