@@ -19,7 +19,7 @@ import tfs.homeworks.project.database.NewsRoomRepository
 class NewsActivity : AppCompatActivity() {
 
     private var isLikedNews: Boolean = false
-    private val db = NewsRoomRepository.getInstance(this)
+    private val db = ProjectApp.db
     private var newsItem: NewsItem? = null
     private val disposable = CompositeDisposable()
 

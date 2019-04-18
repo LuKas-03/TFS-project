@@ -39,7 +39,7 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
 
     private fun createDataSet() {
         if (isLikedNews) {
-            disposable.add(MainActivity.getDatabaseInstance().getLikedNews()
+            disposable.add(ProjectApp.db.getLikedNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -47,7 +47,7 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
                     {Log.e("ERROR", "Unable to load liked news collection", it)})
             )
         } else {
-            disposable.add(MainActivity.getDatabaseInstance().getNews()
+            disposable.add(ProjectApp.db.getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
