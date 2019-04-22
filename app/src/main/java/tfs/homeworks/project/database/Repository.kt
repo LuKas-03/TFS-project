@@ -14,6 +14,8 @@ interface Repository {
     fun addToLikedNews(newsItem: NewsItem): Completable
     fun insertNews(newsItems: List<NewsItem>): Completable
 
+    fun updateNews(newsItem: NewsItem): Completable
+
     fun deleteNews(newsItem: NewsItem)
     fun deleteFromLikedNews(newsItem: NewsItem): Completable
 

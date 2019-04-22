@@ -25,6 +25,9 @@ interface NewsDao {
     @Insert(onConflict = REPLACE)
     fun insert(newsItems: List<NewsItem>): Completable
 
+    @Update
+    fun update(newsItem: NewsItem): Completable
+
     @Delete
     fun delete(newsItem: NewsItem)
 

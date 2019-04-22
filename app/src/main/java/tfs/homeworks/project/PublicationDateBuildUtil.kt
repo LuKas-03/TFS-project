@@ -12,7 +12,7 @@ class PublicationDateBuildUtil {
             val now = Calendar.getInstance()
             if (now[Calendar.YEAR] == this[Calendar.YEAR] && now[Calendar.MONTH] == this[Calendar.MONTH]){
                 if (now[Calendar.DAY_OF_MONTH] == this[Calendar.DAY_OF_MONTH]) {
-                    return systemResources.getString(R.string.today_ru)
+                    return "Сегодня"
                 }
                 now.add(Calendar.DATE, -1)
                 if (now[Calendar.DATE] == this[Calendar.DATE]) {

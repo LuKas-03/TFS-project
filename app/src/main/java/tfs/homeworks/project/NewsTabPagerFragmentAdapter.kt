@@ -8,15 +8,19 @@ import androidx.viewpager.widget.PagerAdapter
 import tfs.homeworks.project.database.Repository
 
 
-class NewsTabPagerFragmentAdapter(fm: androidx.fragment.app.FragmentManager?, context: Context) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+class NewsTabPagerFragmentAdapter(
+    fm: FragmentManager,
+    context: Context,
+    private val isNetworkConnect: Boolean
+) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
 
     private val tabTitles = arrayOf(
         context.getString(R.string.last_news_tab_title),
         context.getString(R.string.liked_news_tab_title)
     )
 
-    override fun getItem(position: Int): androidx.fragment.app.Fragment {
-        return NewsPageFragment.newInstance(position == LIKED_NEWS)
+    override fun getItem(position: Int): Fragment {
+        return NewsPageFragment.newInstance(position == LIKED_NEWS, isNetworkConnect)
     }
 
     override fun getCount(): Int {
@@ -28,7 +32,7 @@ class NewsTabPagerFragmentAdapter(fm: androidx.fragment.app.FragmentManager?, co
     }
 
     override fun getItemPosition(`object`: Any): Int {
-        return androidx.viewpager.widget.PagerAdapter.POSITION_NONE
+        return PagerAdapter.POSITION_NONE
     }
 
     companion object {

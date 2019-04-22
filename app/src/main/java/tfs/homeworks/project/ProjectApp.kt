@@ -1,12 +1,24 @@
 package tfs.homeworks.project
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import tfs.homeworks.project.database.NewsRoomRepository
 import tfs.homeworks.project.database.Repository
+import tfs.homeworks.project.network.TinkoffNewsApi
+import tfs.homeworks.project.network.TinkoffNewsData
+import java.util.*
+import android.net.NetworkInfo
+import android.content.Context.CONNECTIVITY_SERVICE
+import androidx.appcompat.app.AlertDialog
+
 
 class ProjectApp: Application() {
 
@@ -15,33 +27,50 @@ class ProjectApp: Application() {
 
         val disposable = CompositeDisposable()
         db = NewsRoomRepository.getInstance(this)
-        disposable.add(ProjectApp.db.getNews()
-            .firstOrError()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { t1 -> if ( t1.isEmpty()) addStabsToDatabase(disposable) },
-                { error -> Log.e("ERROR", "Unable to add stabs", error) }))
+
+        val callAdapterFactory = RxJava2CallAdapterFactory
+            .createWithScheduler(Schedulers.io())
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.tinkoff.ru/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(callAdapterFactory)
+            .build()
+
+        newsApi = retrofit.create(TinkoffNewsApi::class.java)
+
+        loadNews(disposable)
     }
 
-    private fun addStabsToDatabase(disposable: CompositeDisposable) {
-        val news = listOf (
-            NewsItem("Last news #1", "This is not interesting news", "2019-03-17", getString(R.string.stub)),
-            NewsItem("Last news #2", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
-            NewsItem("Last news #3", "This is not interesting news", "2019-03-16", getString(R.string.stub)),
-            NewsItem("Best news #1", "This is very interesting news", "2019-03-12", getString(R.string.stub)),
-            NewsItem("Best news #2", "This is very interesting news", "2018-12-01", getString(R.string.stub))
-        )
 
-        disposable
-            .add(ProjectApp.db.insertNews(news)
+    fun loadNews(disposable: CompositeDisposable) {
+        disposable.add(newsApi.GetAllNews()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe())
+            .subscribe (
+                { news -> addNews(news.payload, disposable)},
+                { error -> Log.e("ERROR", "Unable to add news", error) }
+            ))
+    }
+
+    private fun addNews(newsDataCollection: List<TinkoffNewsData.NewsSimpleData>, disposable: CompositeDisposable) {
+        val news = mutableListOf<NewsItem>()
+        for (newsData in newsDataCollection) {
+            val time = Calendar.getInstance()
+            time.timeInMillis = newsData.publicationDate.milliseconds
+            news.add(NewsItem(newsData.id, newsData.text, time, null))
+        }
+        disposable
+            .add(ProjectApp.db.insertNews(news)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe())
     }
 
     companion object {
         lateinit var db: Repository
+            private set
+        lateinit var newsApi: TinkoffNewsApi
             private set
     }
 

@@ -16,14 +16,15 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
 
     private var dataSet: ArrayList<Any>  = arrayListOf()
     private var recyclerViewAdapter: NewsAdapter = NewsAdapter(dataSet, this)
-    private var newsItems: MutableList<NewsItem>  = mutableListOf()
     private var isLikedNews: Boolean = false
+    private var isNetworkConnect: Boolean = false
     private val disposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             isLikedNews = it.getBoolean(ARG_NEWS_TYPE)
+            isNetworkConnect = it.getBoolean(ARG_NETWORK)
         }
     }
 
@@ -67,6 +68,9 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
         dataSet = arrayListOf(NewsGroupHeader(newsItems[0].getDateInLongFormat()!!))
 
         for (newsItem in newsItems) {
+            if (!isNetworkConnect && newsItem.content == null) {
+                continue
+            }
             if (newsItem.date != currentDate) {
                 dataSet.add(NewsGroupHeader(newsItem.getDateInLongFormat()!!))
                 currentDate = newsItem.date
@@ -88,7 +92,7 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView =view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.newsRecyclerView)
+        val recyclerView =view.findViewById<RecyclerView>(R.id.newsRecyclerView)
 
         recyclerView.adapter = recyclerViewAdapter
         recyclerView.addItemDecoration(NewsItemDecoration(2))
@@ -100,12 +104,14 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
 
     companion object {
         private const val ARG_NEWS_TYPE = "newsType"
+        private const val ARG_NETWORK = "hasNetworkConnect"
 
         @JvmStatic
-        fun newInstance(isLikedNews: Boolean) =
+        fun newInstance(isLikedNews: Boolean, hasNetworkConnect: Boolean) =
             NewsPageFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(ARG_NEWS_TYPE, isLikedNews)
+                    putBoolean(ARG_NETWORK, hasNetworkConnect)
                 }
             }
     }

@@ -12,24 +12,23 @@ import java.util.*
 class NewsItem() : Parcelable {
 
     constructor(parcel: Parcel) : this() {
-        val data = arrayOfNulls<String>(5)
+        val data = arrayOfNulls<String>(4)
         parcel.readStringArray(data)
         id = data[0]!!.toInt()
         title = data[1]
-        shortDescription = data[2]
-        date = data[3]
-        content = data[4]
+        date = data[2]
+        content = data[3]
     }
 
-    constructor(title: String, shortDescription: String, publication: String, content: String?) : this() {
+    constructor(id: Int, title: String, publication: String, content: String?) : this() {
+        this.id = id
         this.title = title
-        this.shortDescription = shortDescription
         this.date = publication
         this.content = content
     }
 
-    constructor(title: String, shortDescription: String, publication: Calendar, content: String?)
-            : this(title, shortDescription, dateToString(publication), content)
+    constructor(id: Int, title: String, publication: Calendar, content: String?)
+            : this(id, title, dateToString(publication), content)
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
@@ -51,7 +50,7 @@ class NewsItem() : Parcelable {
 
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeStringArray(arrayOf(id.toString(), title, shortDescription, date, content))
+        dest?.writeStringArray(arrayOf(id.toString(), title, date, content))
     }
 
     override fun describeContents(): Int {

@@ -41,6 +41,10 @@ class NewsRoomRepository private constructor(context: Context) : Repository{
         return newsDao.insert(newsItems)
     }
 
+    override fun updateNews(newsItem: NewsItem): Completable {
+        return newsDao.update(newsItem)
+    }
+
     override fun deleteNews(newsItem: NewsItem) {
         newsDao.delete(newsItem)
     }
