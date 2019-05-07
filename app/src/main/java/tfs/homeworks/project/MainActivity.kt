@@ -6,11 +6,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
+import io.reactivex.disposables.CompositeDisposable
+import tfs.homeworks.project.network.NewsLoadHelper
+
 
 class MainActivity : AppCompatActivity() {
 
     private var adapter: NewsTabPagerFragmentAdapter? = null
     private var isNetworkConnect: Boolean = false
+    private lateinit var disposable: CompositeDisposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onStart() {
+        super.onStart()
+
+        disposable = CompositeDisposable()
+        NewsLoadHelper.loadNews(disposable)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        disposable.clear()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -57,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialog() {
         val dialog = AlertDialog.Builder(this)
-            .setMessage("Доступ к интернету отключен, функционал приложения ограничен.")
+            .setMessage(getString(R.string.no_connect_message))
             .setPositiveButton("OK", null)
             .create()
         dialog.show()

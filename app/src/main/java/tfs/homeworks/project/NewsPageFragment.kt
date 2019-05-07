@@ -7,18 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import tfs.homeworks.project.network.NewsLoadHelper
 
 
-class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListener {
+class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private var dataSet: ArrayList<Any>  = arrayListOf()
     private var recyclerViewAdapter: NewsAdapter = NewsAdapter(dataSet, this)
     private var isLikedNews: Boolean = false
     private var isNetworkConnect: Boolean = false
     private val disposable = CompositeDisposable()
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,9 +72,6 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
         dataSet = arrayListOf(NewsGroupHeader(newsItems[0].getDateInLongFormat()!!))
 
         for (newsItem in newsItems) {
-            if (!isNetworkConnect && newsItem.content == null) {
-                continue
-            }
             if (newsItem.date != currentDate) {
                 dataSet.add(NewsGroupHeader(newsItem.getDateInLongFormat()!!))
                 currentDate = newsItem.date
@@ -92,14 +93,21 @@ class NewsPageFragment : androidx.fragment.app.Fragment(), OnNewsItemClickListen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView =view.findViewById<RecyclerView>(R.id.newsRecyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.newsRecyclerView)
 
         recyclerView.adapter = recyclerViewAdapter
         recyclerView.addItemDecoration(NewsItemDecoration(2))
+
+        swipeRefreshLayout = view.findViewById(R.id.refresh)
+        swipeRefreshLayout.setOnRefreshListener(this)
     }
 
     override fun onNewsItemClick(position: Int, newsItem: NewsItem, newsType: Int) {
         startActivity(NewsActivity.createIntent(requireContext(), newsItem, isLikedNews))
+    }
+
+    override fun onRefresh() {
+        NewsLoadHelper.loadNews(disposable) {swipeRefreshLayout.isRefreshing = false}
     }
 
     companion object {

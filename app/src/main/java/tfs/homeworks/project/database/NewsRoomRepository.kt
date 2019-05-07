@@ -2,9 +2,7 @@ package tfs.homeworks.project.database
 
 import android.content.Context
 import androidx.room.Room
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import io.reactivex.*
 import tfs.homeworks.project.NewsItem
 
 class NewsRoomRepository private constructor(context: Context) : Repository{
@@ -45,12 +43,16 @@ class NewsRoomRepository private constructor(context: Context) : Repository{
         return newsDao.update(newsItem)
     }
 
-    override fun deleteNews(newsItem: NewsItem) {
-        newsDao.delete(newsItem)
+    override fun deleteNews(newsItem: NewsItem): Completable {
+        return newsDao.delete(newsItem)
     }
 
     override fun deleteFromLikedNews(newsItem: NewsItem): Completable {
         return likedNewsDao.deleteNews(newsItem.id)
+    }
+
+    override fun deleteNews(newsItems: List<NewsItem>): Completable {
+        return newsDao.delete(newsItems)
     }
 
     override fun isLikedNews(newsItem: NewsItem): Single<Boolean> {

@@ -18,14 +18,16 @@ import java.util.*
 import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import androidx.appcompat.app.AlertDialog
+import io.reactivex.Completable
+import io.reactivex.Flowable
 
 
 class ProjectApp: Application() {
-
+    private lateinit var disposable: CompositeDisposable
     override fun onCreate() {
         super.onCreate()
 
-        val disposable = CompositeDisposable()
+        disposable = CompositeDisposable()
         db = NewsRoomRepository.getInstance(this)
 
         val callAdapterFactory = RxJava2CallAdapterFactory
@@ -39,32 +41,23 @@ class ProjectApp: Application() {
 
         newsApi = retrofit.create(TinkoffNewsApi::class.java)
 
-        loadNews(disposable)
+        deleteOldNews(disposable)
     }
 
-
-    fun loadNews(disposable: CompositeDisposable) {
-        disposable.add(newsApi.GetAllNews()
+    fun deleteOldNews(disposable: CompositeDisposable) {
+        disposable.add(db.getNews()
+            .map { it.drop(100) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe (
-                { news -> addNews(news.payload, disposable)},
-                { error -> Log.e("ERROR", "Unable to add news", error) }
+            .subscribe(
+                { news ->
+                    disposable.add(db.deleteNews(news)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe()
+                ) },
+                { error -> Log.e("ERROR", "Unable to delete news", error) }
             ))
-    }
-
-    private fun addNews(newsDataCollection: List<TinkoffNewsData.NewsSimpleData>, disposable: CompositeDisposable) {
-        val news = mutableListOf<NewsItem>()
-        for (newsData in newsDataCollection) {
-            val time = Calendar.getInstance()
-            time.timeInMillis = newsData.publicationDate.milliseconds
-            news.add(NewsItem(newsData.id, newsData.text, time, null))
-        }
-        disposable
-            .add(ProjectApp.db.insertNews(news)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
     }
 
     companion object {

@@ -29,7 +29,10 @@ interface NewsDao {
     fun update(newsItem: NewsItem): Completable
 
     @Delete
-    fun delete(newsItem: NewsItem)
+    fun delete(newsItem: NewsItem): Completable
+
+    @Delete
+    fun delete(newsItem: List<NewsItem>): Completable
 
     @Query("DELETE FROM NewsItem")
     fun deleteAll()
