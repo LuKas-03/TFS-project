@@ -46,7 +46,8 @@ class ProjectApp: Application() {
 
     fun deleteOldNews(disposable: CompositeDisposable) {
         disposable.add(db.getNews()
-            .map { it.drop(100) }
+            .sorted()
+            .map { it.sortedBy { newsItem -> newsItem.date }.drop(100) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
